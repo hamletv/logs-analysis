@@ -6,6 +6,7 @@
 
 import psycopg2 as psy
 
+# Helper function to connect DB instead of adding code block to each query functionality
 def connectAccessDB(db_query):
 
     db = psy.connect(database = "news")
@@ -44,6 +45,7 @@ def getPopularAuthors():
     for result in db_result:
         print(result[0] + " - " + str(result[1]) + " views")
 
+# Create two tables from log, join and create percentage.        
 def getDaysErrors():
 
     db_query = '''
@@ -52,16 +54,17 @@ def getDaysErrors():
     ) AS percent
 
     FROM (
-        SELECT time::date AS date, COUNT(*) AS all_errors
+        SELECT time::date AS date,
+        COUNT(*) AS all_errors
         FROM log WHERE status = '404 NOT FOUND'
-        GROUP BY time::date
+        GROUP BY date
     ) AS errors
 
     JOIN (
-        SELECT time::date AS date, COUNT(*)
-        AS all_queries
+        SELECT time::date AS date,
+        COUNT(*) AS all_queries
         FROM log
-        GROUP BY time::date
+        GROUP BY date
     ) AS queries
 
     ON errors.date = queries.date
@@ -71,15 +74,10 @@ def getDaysErrors():
     ORDER BY percent;
     '''
     print('\n')
-    db = psy.connect(database = "news")
-    db_cursor = db.cursor()
-    db_cursor.execute(db_query3)
-    query_result = db_cursor.fetchall()
-    for result in query_result:
-        print(result[0] + " - " + str(result[1]) + " views")
-
-    db_cursor.close()
-    db.close()
+    db_result = connectAccessDB(db_query)
+    answer = '"%s" - %s percent\n'
+    date_percent = "".join(answer % (date, percent) for date, percent in db_result)
+    print(date_percent)
 
 if __name__ == "__main__":
     getTopThreeArticles()
