@@ -15,7 +15,8 @@ To load the data while in your vagrant directory use: `psql -d news -f newsdata.
 
 Once you've completed this simply run: `python logs-analysis` in a separate terminal to have reports returned.
 
-**Tools needed**
-[Vagrant](https://www.vagrantup.com/)
-[Virtual Machine](https://www.virtualbox.org/)
-Terminal
+**Tools needed:**
+
+- [Vagrant](https://www.vagrantup.com/)
+- [Virtual Machine](https://www.virtualbox.org/)
+- Terminal
